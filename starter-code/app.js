@@ -13,6 +13,10 @@ const session            = require('express-session');
 const MongoStore         = require('connect-mongo')(session);
 const mongoose           = require('mongoose');
 const flash              = require('connect-flash');
+const postsRouter = require('./routes/postsRouter');
+const commentsRouter = require('./routes/commentsRouter');
+var multer = require('multer');
+var upload = multer({ dest: './public/uploads/' });
 
 mongoose.connect('mongodb://localhost:27017/tumblr-lab-development');
 
@@ -71,16 +75,20 @@ passport.use('local-signup', new LocalStrategy(
                 return next(null, false);
             } else {
                 // Destructure the body
+
                 const {
                   username,
                   email,
-                  password
+                  password,
+                  profileImage
                 } = req.body;
                 const hashPass = bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+
                 const newUser = new User({
                   username,
                   email,
-                  password: hashPass
+                  password: hashPass,
+                  profileImage: `/uploads/${req.file.filename}`
                 });
 
                 newUser.save((err) => {
@@ -105,6 +113,8 @@ const index = require('./routes/index');
 const authRoutes = require('./routes/authentication');
 app.use('/', index);
 app.use('/', authRoutes);
+app.use('/posts', postsRouter);
+app.use('/posts', commentsRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -122,6 +132,10 @@ app.use((err, req, res, next) => {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+app.listen(3000, () => {
+  console.log('Tumblr server listening')
 });
 
 module.exports = app;

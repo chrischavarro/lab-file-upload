@@ -1,0 +1,14 @@
+<h2>Showing Post</h2>
+
+<b>Content: </b> <%= post.content %> <br>
+<%= post.picName %> <br>
+<img src=" <%= post.picPath %>"> <br>
+<a href="/posts/<%= post._id %>/comment">Comment on this Post</a>
+<br><br>
+<b>Comments</b>
+<br>
+<% comments.forEach((comment) => { %>
+  <%= comment.content %> <br>
+  <img src="<%= comment.imagePath %>" width="50px">
+  <%= comment.imageName %> <br>
+<% }) %>

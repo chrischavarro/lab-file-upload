@@ -1,0 +1,15 @@
+<% posts.forEach((post) => { %>
+  <div class="form-group">
+    <label for="content">Content</label>
+    <%= post.content %>
+  </div>
+
+  <div class="form-group">
+    <label for="content">Picture</label>
+    <%= post.picName %>
+    <img src="<%= post.picPath %>" width="200px">
+  </div>
+<% }) %>
+<% if (typeof(message) !== 'undefined') { %>
+  <%= message %>
+<% } %>
